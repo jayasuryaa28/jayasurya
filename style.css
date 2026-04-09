@@ -620,3 +620,45 @@ button{
   }
 
 }
+
+
+/* APP UI */
+.page{
+  position:fixed;
+  width:100%;
+  height:100vh;
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.page.active{
+  display:flex;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  height:60px;
+  background:rgba(0,0,0,0.8);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:1000;
+}
+
+.bottom-nav span{
+  font-size:22px;
+  color:#aaa;
+}
+
+.bottom-nav span:hover{
+  color:#00ffff;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+  .navbar{ display:none; }
+}
