@@ -173,3 +173,35 @@ window.addEventListener("resize",()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+
+
+/* SWIPE NAVIGATION */
+let startY = 0;
+let endY = 0;
+
+window.addEventListener("touchstart",(e)=>{
+  startY = e.touches[0].clientY;
+});
+
+window.addEventListener("touchend",(e)=>{
+  endY = e.changedTouches[0].clientY;
+  handleSwipe();
+});
+
+function handleSwipe(){
+
+  const order = ["home","about","journey","skills","memories","contact"];
+  let index = order.indexOf(currentPage);
+
+  if(startY - endY > 50){
+    if(index < order.length - 1){
+      showSection(order[index + 1]);
+    }
+  }
+
+  if(endY - startY > 50){
+    if(index > 0){
+      showSection(order[index - 1]);
+    }
+  }
+}
