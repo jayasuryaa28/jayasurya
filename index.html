@@ -1,226 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MOODIFY ELITE OS | Neural Ecosystem</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;900&family=Syncopate:wght@700&family=Poppins:wght@200;400;700&display=swap" rel="stylesheet">
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<title>Jayasurya</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
-
 <body>
 
-<!-- ================= NAVBAR ================= -->
-<header class="navbar">
+    <canvas id="neural-bg"></canvas>
 
-  <div class="logo">JAYASURYA</div>
+    <div class="os-interface">
+        
+        <nav class="elite-sidebar">
+            <div class="nav-brand">M</div>
+            <div class="nav-links">
+                <div class="nav-item active" onclick="switchOS('home')" title="Core Dashboard">🏠</div>
+                <div class="nav-item" onclick="switchOS('ai-detect')" title="AI Diagnostics">🧠</div>
+                <div class="nav-item" onclick="switchOS('games')" title="Neural Games">🎮</div>
+                <div class="nav-item" onclick="switchOS('beauty')" title="Aesthetic Engine">💎</div>
+            </div>
+            <div class="user-status"></div>
+        </nav>
 
-  <nav>
-    <a onclick="showSection('home')">Home</a>
-    <a onclick="showSection('about')">About</a>
-    <a onclick="showSection('journey')">Journey</a>
-    <a onclick="showSection('skills')">Skills</a>
-    <a onclick="showSection('contact')">Contact</a>
-  </nav>
+        <main class="viewport-glass">
+            
+            <header class="glass-header">
+                <div class="header-left">
+                    <h1 class="logo-glow">MOODIFY <span class="gold">ELITE</span></h1>
+                </div>
+                <div class="header-right">
+                    <span id="os-clock">00:00:00</span>
+                </div>
+            </header>
 
-</header>
+            <div class="content-scroll">
+                
+                <section id="screen-home" class="os-screen active">
+                    <div class="hero-zoom-container">
+                        <div class="profile-orb">
+                            <div class="inner-pulse"></div>
+                            <img id="user-display" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elite" alt="User">
+                        </div>
+                        <h2 class="title-3d">Elite Workspace</h2>
+                        <p class="tagline">The ultimate biometric interaction ecosystem.</p>
+                    </div>
 
-<!-- ================= MAIN ================= -->
-<div class="container">
+                    <div class="home-interaction-grid">
+                        <div class="glass-module blink-typer">
+                            <h3>Neural Eye-Typer</h3>
+                            <div class="type-display" id="blink-output">Blink to Start Typing...</div>
+                            <div class="keyboard-preview">A | B | C | D | E</div>
+                            <p class="hint">Focus and blink to select characters.</p>
+                        </div>
+                        
+                        <div class="glass-module air-draw" onclick="navigate('gesture-screen')">
+                            <h3>Aero-Hand Draw</h3>
+                            <div class="draw-preview">✍️</div>
+                            <p>Draw letters in the air via Hand-Pose AI.</p>
+                        </div>
+                    </div>
+                </section>
 
-<!-- ===================================================== -->
-<!-- ================= HOME =============================== -->
-<!-- ===================================================== -->
+                <section id="screen-ai-detect" class="os-screen">
+                    <div class="diagnostics-header">
+                        <h2 class="gold">AI Diagnostics</h2>
+                    </div>
+                    
+                    <div class="camera-vault">
+                        <div class="biometric-frame">
+                            <video id="video" autoplay muted playsinline></video>
+                            <canvas id="draw-overlay"></canvas>
+                            <div class="scan-neon-line"></div>
+                        </div>
+                        <div class="input-actions">
+                            <button class="btn-royal" onclick="captureSnapshot()">ANALYSIS SCAN</button>
+                            <label for="gallery-input" class="btn-ghost">UPLOAD FROM GALLERY</label>
+                            <input type="file" id="gallery-input" hidden accept="image/*" onchange="loadGalleryImage(event)">
+                        </div>
+                    </div>
+                    
+                    <div id="ai-results" class="results-dashboard">
+                        </div>
+                </section>
 
-<section id="home" class="page active">
+                <section id="screen-games" class="os-screen">
+                    <div class="game-selector">
+                        <div class="game-card" onclick="initGame('runner')">
+                            <div class="game-thumb runner-bg">🏃</div>
+                            <h3>NEURAL RUNNER</h3>
+                            <p>Control with Eye-Blinks</p>
+                        </div>
+                        <div class="game-card" onclick="initGame('car')">
+                            <div class="game-thumb car-bg">🏎️</div>
+                            <h3>CYBER DRIVE</h3>
+                            <p>Blink Navigation</p>
+                        </div>
+                    </div>
+                    
+                    <div id="game-viewport" class="hidden">
+                        <canvas id="game-canvas"></canvas>
+                        <div class="game-controls-overlay">
+                            <span id="game-score">Score: 0</span>
+                            <button onclick="closeGame()">Exit</button>
+                        </div>
+                    </div>
+                </section>
 
-  <div class="hero-wrapper">
+                <section id="screen-beauty" class="os-screen">
+                    <div class="beauty-grid">
+                        <div class="beauty-card" onclick="startBeautyAI()">
+                            <div class="card-lux">💎</div>
+                            <h3>Aesthetic Percentage</h3>
+                            <p>Deep symmetry & skin analysis.</p>
+                        </div>
+                        <div class="beauty-card" onclick="startCelebAI()">
+                            <div class="card-lux">🎭</div>
+                            <h3>Celeb Doppelgänger</h3>
+                            <p>Find your famous twin.</p>
+                        </div>
+                        <div class="beauty-card" onclick="generateNickName()">
+                            <div class="card-lux">🏷️</div>
+                            <h3>Neural Nickname</h3>
+                            <p>AI generated name based on aura.</p>
+                        </div>
+                    </div>
+                    <div id="beauty-report" class="premium-report"></div>
+                </section>
 
-    <!-- LEFT IMAGE -->
-    <div class="left">
-
-      <div class="image-wrapper">
-        <div class="glow"></div>
-<img src="js_smilepic.jpeg"> 
-      </div>
-
-      <div class="buttons">
-
-  <button class="btn primary" onclick="showSection('about')">
-    Explore
-  </button>
-
-  <button class="btn secondary" onclick="showSection('contact')">
-    Contact Me
-  </button>
-
-</div>
-
+            </div>
+        </main>
     </div>
-
-    <!-- RIGHT TEXT -->
-    <div class="right">
-
-      <div class="apple-container">
-
-        <h1 class="apple-main shine-text float-text">
-  Jayasurya
-</h1> <br>
-        <a 
-  href="https://calendar.google.com/calendar/u/0/r/day/2006/8/28" 
-  target="_blank" 
-  class="apple-sub calendar-link">
-  28 Aug 2006
-</a> <br>
-        <a href="https://www.rgcet.edu.in/" target="_blank" class="apple-sub clg-link">
-  CSE Student
-</a> <br>
-        <a href="https://www.instagram.com/jayaa_suryaa?igsh=MWRlZzJ3dnFvdHVjbg%3D%3D" target="_blank" class="apple-sub insta-link">
-  @jayaa_suryaa
-</a> <br>
-        <a href="https://youtu.be/_e45NEdNMXE?si=eoD4CrPH5fRwDOMX" 
-   target="_blank" 
-   class="apple-sub yt-link">
-   Chill Guy 
-</a> <br>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- ================= ABOUT ============================== -->
-<!-- ===================================================== -->
-
-<section id="about" class="page">
-
-  <div class="section-wrapper">
-
-    <h1 class="reveal">About Me</h1>
-
-    <p>
-      I am a Computer Science student with a strong foundation in programming, web development, and user interface design. I have hands-on experience in building responsive websites using HTML, CSS, and JavaScript, along with creating modern UI/UX designs with smooth animations and interactive elements.
-I am particularly interested in integrating AI-based features into applications to enhance user experience and functionality. I continuously improve my skills by working on real-world projects and experimenting with new technologies.
-Beyond technical skills, I have a growing interest in business and entrepreneurship. I aim to build digital products and scalable solutions that not only solve problems but also create real value in the market.
-    </p>
-
-    <div class="about-cards">
-
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- ================= JOURNEY ============================ -->
-<!-- ===================================================== -->
-
-<section id="journey" class="page">
-
-  <div class="section-wrapper">
-
-    <h1 class="reveal">My Journey</h1>
-
-    <div class="timeline">
-
-      <div class="timeline-item">
-        <h3>2020</h3>
-        <p>10th completed</p>
-      </div>
-
-      <div class="timeline-item">
-        <h3>2022</h3>
-        <p>12th completed</p>
-      </div>
-
-      <div class="timeline-item">
-        <h3>2024</h3>
-        <p>learn about entrepreneurship</p>
-      </div>
-
-      <div class="timeline-item">
-        <h3>2026</h3>
-        <p>planning for startup</p>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- ================= SKILLS ============================= -->
-<!-- ===================================================== -->
-
-<section id="skills" class="page">
-
-  <div class="section-wrapper">
-
-    <h1 class="reveal">Skills</h1>
-
-    <div class="skills-grid">
-
-      <div class="skill">HTML</div> <br>
-      <div class="skill">CSS</div> <br>
-      <div class="skill">business management</div>
-      <div class="skill">AI prompt engineering</div>
-      <div class="skill">Creative Thinking</div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ===================================================== -->
-<!-- ================= CONTACT ============================ -->
-<!-- ===================================================== -->
-
-<section id="contact" class="page">
-
-  <div class="section-wrapper">
-
-    <h1 class="reveal">Contact Me</h1> <br>
-    <p>📧 9042489937</p> <br>
-    <p>📧 jayasurya28806@gmail.com</p> <br>
-     <a href="https://www.instagram.com/jayaa_suryaa?igsh=MWRlZzJ3dnFvdHVjbg%3D%3D" target="_blank" class="apple-sub insta-link">
-  @jayaa_suryaa
-</a> <br>
-    <p>📍 India</p> <br>
-
-    <h2>“End is another beginning</h2>
-
-  </div>
-
-</section>
-
-</div>
-
-<!-- ================= FOOTER ================= -->
-<footer class="footer">
-  <p>© 2026 Jayasurya 🔥</p>
-</footer>
-
-<!-- ================= JS ================= -->
-<script src="script.js"></script>
-
-  <div class="bottom-nav">
-  <span onclick="showSection('home')">🏠</span>
-  <span onclick="showSection('about')">👤</span>
-  <span onclick="showSection('journey')">📈</span>
-  <span onclick="showSection('skills')">⚡</span>
-  <span onclick="showSection('contact')">📞</span>
-</div>
 
 </body>
 </html>
