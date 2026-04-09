@@ -58,24 +58,42 @@ window.addEventListener("wheel",(e)=>{
 });
 
 /* ================= KEYBOARD NAV ================= */
-window.addEventListener("keydown",(e)=>{
+/* ================= TOUCH / SWIPE NAVIGATION FOR MOBILE ================= */
+let touchStartY = 0;
+let touchEndY = 0;
 
-  const order = ["home","about","journey","skills","memories","contact"];
-  let index = order.indexOf(currentPage);
-
-  if(e.key === "ArrowDown"){
-    if(index < order.length - 1){
-      showSection(order[index + 1]);
-    }
-  }
-
-  if(e.key === "ArrowUp"){
-    if(index > 0){
-      showSection(order[index - 1]);
-    }
-  }
-
+window.addEventListener("touchstart", (e) => {
+  touchStartY = e.changedTouches[0].screenY;
 });
+
+window.addEventListener("touchend", (e) => {
+  touchEndY = e.changedTouches[0].screenY;
+  handleMobileSwipe();
+});
+
+function handleMobileSwipe() {
+  if (scrollLock) return;
+
+  // 'memories' ah remove pannitten yenna athu unga HTML la illa
+  const order = ["home", "about", "journey", "skills", "contact"];
+  let index = order.indexOf(currentPage);
+  
+  let swipeDistance = touchStartY - touchEndY;
+
+  // Swipe Up (Go to Next Section)
+  if (swipeDistance > 50 && index < order.length - 1) {
+    scrollLock = true;
+    showSection(order[index + 1]);
+    setTimeout(() => { scrollLock = false; }, 700);
+  }
+
+  // Swipe Down (Go to Previous Section)
+  if (swipeDistance < -50 && index > 0) {
+    scrollLock = true;
+    showSection(order[index - 1]);
+    setTimeout(() => { scrollLock = false; }, 700);
+  }
+}
 
 /* ================= BUTTON SAFETY ================= */
 document.querySelectorAll("button").forEach(btn=>{
